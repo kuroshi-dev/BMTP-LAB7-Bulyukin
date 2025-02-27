@@ -1,6 +1,12 @@
 #include <stdio.h>
+#include <windows.h>
+#include <locale.h>
 
 int main() {
+    SetConsoleCP(65001);
+    SetConsoleOutputCP(65001);
+    setlocale(LC_ALL, "");
+
     int numbers[10];
     int count = 0;
     
@@ -8,6 +14,7 @@ int main() {
     for (int i = 0; i < 10; i++) {
         scanf("%d", &numbers[i]);
     }
+    
     
     for (int i = 0; i < 10; i++) {
         switch (numbers[i]) {
