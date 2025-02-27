@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <windows.h>
 #include <ctype.h>
 #include <locale.h>
 
@@ -12,38 +13,44 @@ void toLowerCase(char *str) {
 }
 
 int main() {
-    setlocale(LC_ALL, "");  // Enable Unicode support
+    SetConsoleCP(65001);
+    SetConsoleOutputCP(65001);
+    setlocale(LC_ALL, "");
+
     char sentence[MAX_LENGTH];
+    char word[] = "комп'ютер";
     int found = 0;
+    int i;
     
     printf("Введіть речення (завершіть /, // або |): ");
     gets(sentence);
-    
-    // Check if sentence ends with valid terminators
+
     int len = strlen(sentence);
-    if (len < 1 || (sentence[len-1] != '/' && sentence[len-1] != '|' && 
-        !(len >= 2 && sentence[len-2] == '/' && sentence[len-1] == '/'))) {
-        printf("Помилка: речення має закінчуватися /, // або |\n");
-        return 1;
+    if (sentence[len-1] != '/' && sentence[len-1] != '|') {
+        if (!(sentence[len-2] == '/' && sentence[len-1] == '/')) {
+            printf("Помилка! Речення має закінчуватись /, // або |\n");
+            return 1;
+        }
     }
-    
-    // Convert sentence to lowercase for case-insensitive search
-    char lowerSentence[MAX_LENGTH];
-    strcpy(lowerSentence, sentence);
-    toLowerCase(lowerSentence);
-    
-    // Search for the word "комп'ютер"
-    const char *word = "комп'ютер";
-    if (strstr(lowerSentence, word) != NULL) {
+
+    for(i = 0; sentence[i] != '\0'; i++) {
+        if(sentence[i] >= 'A' && sentence[i] <= 'Z') {
+            sentence[i] = sentence[i] + 32;
+        }
+    }
+
+    if (strstr(sentence, word) != NULL) {
         found = 1;
     }
-    
-    // Output result
-    if (found) {
-        printf("Слово \"комп'ютер\" знайдено в реченні.\n");
+
+    if (found == 1) {
+        printf("Слово \"комп'ютер\" знайдено!\n");
     } else {
-        printf("Слово \"комп'ютер\" не знайдено в реченні.\n");
+        printf("Слово \"комп'ютер\" не знайдено!\n");
     }
+    
+    printf("Натисніть будь-яку клавішу для завершення...");
+    getchar();
     
     return 0;
 }
